@@ -11,6 +11,8 @@ from core.exceptions import (
 )
 from routers.auth import router as auth_router
 from routers.users import router as users_router
+from routers.events import router as events_router
+from routers.event_tasks import router as event_tasks_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -22,6 +24,8 @@ app.add_exception_handler(ForbiddenException, forbidden_handler)
 
 app.include_router(auth_router)
 app.include_router(users_router)
+app.include_router(events_router)
+app.include_router(event_tasks_router)
 
 
 @app.get("/health")

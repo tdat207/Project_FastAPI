@@ -21,7 +21,7 @@ def register_user(db: Session, user_data: UserCreate) -> User:
     return new_user
 
 
-def authenticate_user(db: Session, email: str, password: str) -> User:
+def login_user(db: Session, email: str, password: str) -> User:
     user = db.query(User).filter(User.email == email).first()
     if not user or not verify_password(password, user.password_hash):
         raise NotFoundException("Email hoặc mật khẩu không đúng")
