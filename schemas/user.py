@@ -23,6 +23,12 @@ class UserLogin(BaseModel):
     password: str
 
 
-class Token(BaseModel):
+class LoginResponse(BaseModel):
+    message: str
     access_token: str
     token_type: str = "bearer"
+
+
+class RegisterResponse(BaseModel):
+    message: str
+    user: UserResponse
