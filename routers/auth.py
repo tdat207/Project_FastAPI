@@ -12,47 +12,20 @@ from services.auth_service import register_user, login_user
 from core.security import create_access_token
 
 
-router = APIRouter(
-    prefix="/auth",
-    tags=["Authentication"]
-)
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
 
-@router.post(
-    "/register",
-    response_model=RegisterResponse
-)
-def register(
-    user_data: UserCreate,
-    db: Session = Depends(get_db)
-):
+@router.post("/register", response_model=RegisterResponse)
+def register(user_data: UserCreate, db: Session = Depends(get_db)):
     user = register_user(db, user_data)
 
-    return RegisterResponse(
-        message="Đăng ký thành công",
-        user=user
-    )
+    return RegisterResponse(message="Đăng ký thành công", user=user)
 
 
-@router.post(
-    "/login",
-    response_model=LoginResponse
-)
-def login(
-    login_data: UserLogin,
-    db: Session = Depends(get_db)
-):
-    user = login_user(
-        db,
-        login_data.email,
-        login_data.password
-    )
+@router.post("/login", response_model=LoginResponse)
+def login(login_data: UserLogin, db: Session = Depends(get_db)):
+    user = login_user(db, login_data.email, login_data.password)
 
-    access_token = create_access_token(
-        {"sub": user.email}
-    )
+    access_token = create_access_token({"sub": user.email})
 
-    return LoginResponse(
-        message="Đăng nhập thành công",
-        access_token=access_token
-    )
+    return LoginResponse(message="Đăng nhập thành công", access_token=access_token)

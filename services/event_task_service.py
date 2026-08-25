@@ -19,7 +19,9 @@ def get_task_or_404(db: Session, task_id: int) -> EventTask:
     return task
 
 
-def create_task(db: Session, user: User, event_id: int, data: EventTaskCreate) -> EventTask:
+def create_task(
+    db: Session, user: User, event_id: int, data: EventTaskCreate
+) -> EventTask:
     get_event_or_404(db, event_id)
     require_member(db, event_id, user.id)
 
@@ -42,11 +44,17 @@ def create_task(db: Session, user: User, event_id: int, data: EventTaskCreate) -
 
 
 def get_tasks(
-    db: Session, user: User, event_id: int,
-    status: Optional[str] = None, priority: Optional[str] = None,
-    assignee: Optional[int] = None, search: Optional[str] = None,
-    limit: int = 10, offset: int = 0,
-    sort_by: str = "created_at", order: str = "desc",
+    db: Session,
+    user: User,
+    event_id: int,
+    status: Optional[str] = None,
+    priority: Optional[str] = None,
+    assignee: Optional[int] = None,
+    search: Optional[str] = None,
+    limit: int = 10,
+    offset: int = 0,
+    sort_by: str = "created_at",
+    order: str = "desc",
 ):
     get_event_or_404(db, event_id)
     require_member(db, event_id, user.id)
@@ -74,14 +82,18 @@ def get_task_detail(db: Session, user: User, task_id: int) -> EventTask:
     return task
 
 
-def update_task(db: Session, user: User, task_id: int, data: EventTaskUpdate) -> EventTask:
+def update_task(
+    db: Session, user: User, task_id: int, data: EventTaskUpdate
+) -> EventTask:
     task = get_task_or_404(db, task_id)
     staff = require_member(db, task.event_id, user.id)
 
     is_owner = staff.role == "OWNER"
     is_assignee = task.assigned_to == user.id
     if not is_owner and not is_assignee:
-        raise ForbiddenException("Chỉ OWNER hoặc người được giao mới được sửa công việc này")
+        raise ForbiddenException(
+            "Chỉ OWNER hoặc người được giao mới được sửa công việc này"
+        )
 
     if data.status is not None:
         if data.status not in ALLOWED_STATUS:

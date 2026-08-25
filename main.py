@@ -27,25 +27,13 @@ app = FastAPI()
 
 
 # Exception handlers
-app.add_exception_handler(
-    NotFoundException,
-    not_found_handler
-)
+app.add_exception_handler(NotFoundException, not_found_handler)
 
-app.add_exception_handler(
-    BadRequestException,
-    bad_request_handler
-)
+app.add_exception_handler(BadRequestException, bad_request_handler)
 
-app.add_exception_handler(
-    ForbiddenException,
-    forbidden_handler
-)
+app.add_exception_handler(ForbiddenException, forbidden_handler)
 
-app.add_exception_handler(
-    RequestValidationError,
-    validation_exception_handler
-)
+app.add_exception_handler(RequestValidationError, validation_exception_handler)
 
 
 # Routers
@@ -57,6 +45,4 @@ app.include_router(event_tasks_router)
 
 @app.get("/health")
 def health_check():
-    return {
-        "status": "ok"
-    }
+    return {"status": "ok"}

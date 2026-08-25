@@ -16,9 +16,11 @@ def get_event_or_404(db: Session, event_id: int) -> Event:
 
 
 def get_staff_record(db: Session, event_id: int, user_id: int):
-    return db.query(EventStaff).filter(
-        EventStaff.event_id == event_id, EventStaff.user_id == user_id
-    ).first()
+    return (
+        db.query(EventStaff)
+        .filter(EventStaff.event_id == event_id, EventStaff.user_id == user_id)
+        .first()
+    )
 
 
 def require_member(db: Session, event_id: int, user_id: int) -> EventStaff:
@@ -36,7 +38,9 @@ def require_owner(db: Session, event_id: int, user_id: int) -> EventStaff:
 
 
 def create_event(db: Session, user: User, event_data: EventCreate) -> Event:
-    new_event = Event(name=event_data.name, description=event_data.description, owner_id=user.id)
+    new_event = Event(
+        name=event_data.name, description=event_data.description, owner_id=user.id
+    )
     db.add(new_event)
     db.commit()
     db.refresh(new_event)
@@ -64,7 +68,9 @@ def get_event_detail(db: Session, user: User, event_id: int) -> Event:
     return event
 
 
-def update_event(db: Session, user: User, event_id: int, event_data: EventUpdate) -> Event:
+def update_event(
+    db: Session, user: User, event_id: int, event_data: EventUpdate
+) -> Event:
     event = get_event_or_404(db, event_id)
     require_owner(db, event_id, user.id)
 
@@ -112,9 +118,11 @@ def remove_member(db: Session, user: User, event_id: int, target_user_id: int) -
         raise NotFoundException("Thành viên không tồn tại trong sự kiện")
 
     if staff.role == "OWNER":
-        owner_count = db.query(EventStaff).filter(
-            EventStaff.event_id == event_id, EventStaff.role == "OWNER"
-        ).count()
+        owner_count = (
+            db.query(EventStaff)
+            .filter(EventStaff.event_id == event_id, EventStaff.role == "OWNER")
+            .count()
+        )
         if owner_count <= 1:
             raise BadRequestException("Không thể xóa OWNER duy nhất của sự kiện")
 
@@ -132,4 +140,7 @@ def list_members(db: Session, user: User, event_id: int):
         .filter(EventStaff.event_id == event_id)
         .all()
     )
-    return [{"user_id": r.id, "email": r.email, "full_name": r.full_name, "role": r.role} for r in rows]
+    return [
+        {"user_id": r.id, "email": r.email, "full_name": r.full_name, "role": r.role}
+        for r in rows
+    ]
