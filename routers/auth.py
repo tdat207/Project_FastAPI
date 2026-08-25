@@ -12,10 +12,16 @@ from services.auth_service import register_user, login_user
 from core.security import create_access_token
 
 
-router = APIRouter(prefix="/auth", tags=["Authentication"])
+router = APIRouter(
+    prefix="/auth",
+    tags=["Authentication"]
+)
 
 
-@router.post("/register", response_model=RegisterResponse)
+@router.post(
+    "/register",
+    response_model=RegisterResponse
+)
 def register(
     user_data: UserCreate,
     db: Session = Depends(get_db)
@@ -28,7 +34,10 @@ def register(
     )
 
 
-@router.post("/login", response_model=LoginResponse)
+@router.post(
+    "/login",
+    response_model=LoginResponse
+)
 def login(
     login_data: UserLogin,
     db: Session = Depends(get_db)
